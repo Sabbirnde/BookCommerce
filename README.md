@@ -1,6 +1,12 @@
 # BookCommerce
 
-A modern, full-featured e-commerce platform for books built with React, TypeScript, and Vite. Features a comprehensive admin dashboard, email marketing capabilities, and seamless customer experience.
+A modern, full-featured e-commerce platform for books built with React, TypeScript, Vite frontend and PHP MySQL backend. Features a comprehensive admin dashboard, email marketing capabilities, and seamless customer experience.
+
+## ✨ Architecture
+
+**Frontend:** React + TypeScript + Vite + Tailwind CSS  
+**Backend:** PHP + MySQL + JWT Authentication  
+**Deployment:** Apache/Nginx + MySQL Server
 
 ## ✨ Features
 
@@ -33,28 +39,52 @@ A modern, full-featured e-commerce platform for books built with React, TypeScri
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+ 
+- Node.js 18+ (for frontend)
+- PHP 7.4+ (for backend)
+- MySQL 8.0+ (database)
+- Apache or Nginx web server
 - npm or pnpm (recommended)
 
 ### Installation
 
+**Frontend Setup:**
 ```bash
 # Clone the repository
 git clone https://github.com/Sabbirnde/BookCommerce.git
 cd BookCommerce
 
-# Install dependencies (recommended: use pnpm for better Windows compatibility)
+# Install frontend dependencies (recommended: use pnpm for better Windows compatibility)
 pnpm install
 # or
 npm install
+```
 
-# Start the development server
+**Backend Setup:**
+```bash
+# Configure database credentials
+# Edit backend/config/database.php with your MySQL credentials
+
+# Set up the database
+cd backend
+php setup.php
+
+# Configure web server virtual host pointing to project root
+# Example for Apache: DocumentRoot should point to BookCommerce directory
+```
+
+**Start the Application:**
+```bash
+# Start frontend development server
 pnpm run dev
 # or
 npm run dev
+
+# Backend runs on your web server (Apache/Nginx)
+# API accessible at: http://localhost/BookCommerce/backend/api
 ```
 
-The application will be available at **http://localhost:8080**
+The frontend will be available at **http://localhost:8080**
+The backend API will be available at **http://localhost/BookCommerce/backend/api**
 
 ### 🛠️ Troubleshooting Installation Issues
 
@@ -80,7 +110,7 @@ BookCommerce/
 ├── public/                 # Static assets
 │   ├── lovable-uploads/   # Image assets
 │   └── ...
-├── src/
+├── src/                   # Frontend React application
 │   ├── assets/            # Static assets (images, etc.)
 │   ├── components/        # Reusable UI components
 │   │   ├── admin/         # Admin-specific components
@@ -90,16 +120,31 @@ BookCommerce/
 │   ├── contexts/          # React contexts (Auth, etc.)
 │   ├── hooks/             # Custom React hooks
 │   ├── integrations/      # Third-party integrations
-│   │   └── supabase/      # Supabase configuration
 │   ├── lib/               # Utilities, stores, and data
 │   │   ├── bookData.ts    # Book data management
 │   │   ├── cartStore.ts   # Shopping cart state
 │   │   └── wishlistStore.ts # Wishlist state
 │   ├── pages/             # Application pages
 │   └── ...
-├── supabase/              # Supabase configuration
-│   ├── functions/         # Edge functions
-│   └── migrations/        # Database migrations
+├── backend/               # PHP Backend API
+│   ├── api/               # API endpoints
+│   │   ├── auth.php       # Authentication
+│   │   ├── books.php      # Book management
+│   │   ├── cart.php       # Shopping cart
+│   │   └── index.php      # API router
+│   ├── config/            # Configuration
+│   │   ├── config.php     # General config
+│   │   └── database.php   # Database config
+│   ├── models/            # Data models
+│   │   ├── User.php       # User model
+│   │   ├── Book.php       # Book model
+│   │   ├── Category.php   # Category model
+│   │   └── Cart.php       # Cart model
+│   ├── middleware/        # Authentication middleware
+│   ├── utils/             # Utility classes
+│   └── setup.php          # Database setup script
+├── database/              # Database schema and migrations
+│   └── migrations/        # SQL migration files
 └── ...
 ```
 
@@ -114,12 +159,16 @@ BookCommerce/
 - **🚦 React Router** - Client-side routing
 - **🗂️ Zustand** - Lightweight state management
 
-### Backend & Services
-- **🏢 Supabase** - Backend-as-a-Service
-  - Authentication
-  - Database (PostgreSQL)
-  - Real-time subscriptions
-  - Edge functions
+### Backend & Database
+- **🐘 PHP 7.4+** - Server-side scripting language
+- **🗄️ MySQL 8.0+** - Relational database
+- **🔐 JWT Authentication** - Secure token-based auth
+- **🌐 RESTful API** - Clean API architecture
+- **🔒 PDO** - Secure database abstraction layer
+
+### Infrastructure
+- **🖥️ Apache/Nginx** - Web server
+- **🔧 XAMPP/WAMP** - Local development stack
 
 ### Development Tools
 - **📋 ESLint** - Code linting
@@ -130,39 +179,81 @@ BookCommerce/
 ## 🏗️ Available Scripts
 
 ```bash
-# Development
-pnpm run dev          # Start development server
-
-# Building
-pnpm run build        # Build for production
-pnpm run build:dev    # Build in development mode
-
-# Code Quality
+# Frontend Development
+pnpm run dev          # Start frontend development server
+pnpm run build        # Build frontend for production
+pnpm run build:dev    # Build frontend in development mode
 pnpm run lint         # Run ESLint
 pnpm run preview      # Preview production build
+
+# Backend Development
+php -S localhost:8000 # Start PHP development server (alternative)
+# Note: Recommended to use Apache/Nginx with virtual host
+
+# Database
+mysql -u root -p      # Connect to MySQL
+# Then run: SOURCE database/migrations/001_create_bookcommerce_schema.sql
 ```
 
 ## 🚀 Deployment
 
-### Build for Production
-
+### Frontend Deployment
 ```bash
 pnpm run build
 # or
 npm run build
 ```
+The built frontend will be in the `dist` folder.
 
-The built application will be in the `dist` folder.
+### Backend Deployment
+1. Upload the `backend` folder to your web server
+2. Create a MySQL database and import the schema
+3. Configure database credentials in `backend/config/database.php`
+4. Run `php backend/setup.php` to initialize the database
+5. Set up virtual host or configure web server to serve the API
+6. Update CORS settings in `backend/config/config.php`
 
-### Preview Production Build
+### Full Stack Deployment
+- **Frontend**: Deploy to Netlify, Vercel, or serve from the same server
+- **Backend**: Deploy to shared hosting, VPS, or cloud server with PHP/MySQL
+- **Database**: MySQL on the same server or managed database service
 
-```bash
-pnpm run preview
-# or
-npm run preview
-```
+### Environment Configuration
+- Update API endpoints in frontend code to point to your backend URL
+- Configure CORS in backend to allow your frontend domain
+- Use HTTPS in production for secure API communication
 
-## 🤝 Contributing
+## 🔗 API Documentation
+
+The backend provides a comprehensive RESTful API:
+
+### Authentication Endpoints
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login  
+- `GET /api/auth/profile` - Get user profile
+- `PUT /api/auth/profile` - Update user profile
+
+### Book Management
+- `GET /api/books` - Get all books (with filters)
+- `GET /api/books/featured` - Get featured books
+- `GET /api/books/{id}` - Get book by ID
+- `POST /api/books` - Create book (admin only)
+- `PUT /api/books/{id}` - Update book (admin only)
+
+### Shopping Cart
+- `GET /api/cart` - Get cart items
+- `POST /api/cart/add` - Add item to cart
+- `PUT /api/cart/update` - Update cart item
+- `DELETE /api/cart/remove` - Remove cart item
+
+### Categories
+- `GET /api/categories` - Get all categories
+
+**Default Credentials:**
+- Admin: `admin@bookcommerce.com` / `password`
+- Customer: `john@example.com` / `password`
+
+For complete API documentation, see [`backend/README.md`](backend/README.md)
 
 We welcome contributions! Please follow these steps:
 
